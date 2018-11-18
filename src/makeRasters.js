@@ -1,27 +1,22 @@
 'use strict';
 
 var fs = require( 'fs' );
-const { execSync } = require( 'child_process' );
 
-const halfMapExtent = 6378137 * Math.PI; // from EPSG:3875 definition
-
-function runCmd( cmd ) {
-
-	console.log( cmd );
-	return execSync( cmd, { encoding: 'utf8' } );
-
-}
+const lib = require( './CVTlib' );
+const MAXINT = 65536;
 
 function createRasters( tileSet ) {
 
 	const mapSet = 'ANDARA';
-	const sourceRaster = 'SOURCE';
-	const dtmScale = tileSet.dtmScale;
+	const divisions = tileSet.divisions;
+	const halfMapExtent = lib.halfMapExtent;
+
+	var sourceRaster = 'SOURCE';
 
 	var n, s, e, w, zoom;
 
-	var maxTileWidth = halfMapExtent / Math.pow( 2, tileSet.minZoom - 1 );
-	var b = runCmd( 'r.info -g -r map=SOURCE@ANDARA');
+	var maxTileWidth = lib.zoomWidth( tileSet.minZoom );
+	var b = lib.runCmd( 'r.info -g -r map=SOURCE@ANDARA');
 
 	const lines = b.split( '\r\n' );
 
@@ -35,61 +30,78 @@ function createRasters( tileSet ) {
 
 	} );
 
-	console.log( srcInfo );
+	const srcRes = + srcInfo.nsres;
+	const maxHeight = + srcInfo.max;
 
-	for ( zoom = tileSet.minZoom; zoom <= tileSet.maxZoom; zoom++ ) {
+	console.log( 'input resolution: ' + srcRes + ' m' );
+	console.log( 'max height: ' + maxHeight + ' m' );
 
-		var tileWidth = halfMapExtent / Math.pow( 2, zoom - 1 );
+	for ( zoom = 20; zoom >= tileSet.minZoom; zoom-- ) {
+
+		const resolution = lib.zoomWidth( zoom ) / divisions;
+		const diff = Math.abs( srcRes - resolution ) / resolution;
+
+		if ( diff < 0.5 ) break;
+
+	}
+
+	console.log( 'selected max zoom: ' + zoom );
+
+	tileSet.maxZoom = zoom;
+
+	const dtmScale = Math.floor( MAXINT / maxHeight );
+
+	console.log( 'selected dtm scale: ' + dtmScale );
+
+	tileSet.dtmScale = dtmScale;
+
+	sourceRaster += '@' + mapSet;
+
+	for ( zoom = tileSet.maxZoom; zoom >= tileSet.minZoom; zoom-- ) {
+
+		var tileWidth = lib.zoomWidth( zoom );
 		var resolution = tileWidth / tileSet.divisions; // note: tile area extended by resolution/2 all round giving 129 sample row & columns
 		var offset = resolution / 2;
 
-		n =   halfMapExtent - tileSet.minY * maxTileWidth + offset; //
+		n =   halfMapExtent - tileSet.minY * maxTileWidth + offset;
 		s =   halfMapExtent - ( tileSet.maxY + 1) * maxTileWidth - offset;
 
 		e = - halfMapExtent + ( tileSet.maxX + 1 ) * maxTileWidth + offset;
 		w = - halfMapExtent + tileSet.minX * maxTileWidth - offset;
 
+		// define region
+		lib.runCmd( 'g.region n=' + n + ' s=' + s + ' w=' +  w + ' e=' + e + ' nsres=' + resolution + ' ewres=' + resolution );
+
 		var tempFile = 'DTM' + zoom + 'M@' + mapSet;
 
-		// define region
+		if ( zoom === tileSet.maxZoom ) {
 
-		runCmd( 'g.region n=' + n + ' s=' + s + ' w=' +  w + ' e=' + e + ' nsres=' + resolution + ' ewres=' + resolution );
+			lib.runCmd( 'r.resamp.interp --verbose --o input=' + sourceRaster + ' output=' + tempFile );
 
-		// produce downres of source
+		} else {
 
-//		runCmd( 'r.resamp.stats --verbose --o input=' + sourceRaster + '@' + mapSet + ' output=' + tempFile );
-		runCmd( 'r.resamp.interp --verbose --o input=' + sourceRaster + '@' + mapSet + ' output=' + tempFile );
+			// produce downres of higher resolution DTM
 
-		// scale by 64 to increase resolution as a 16b integer (smaller files and type usable by OpenGL)
-		runCmd( 'r.mapcalc --o "DTM' + zoom + 'X=round(' + tempFile + ' * ' + dtmScale + ')"' );
+			lib.runCmd( 'r.resamp.stats --verbose --o input=' + sourceRaster + ' output=' + tempFile );
 
-		runCmd( 'g.remove -f type=raster name=' + tempFile );
+		}
+
+		sourceRaster = tempFile;
+
+		// scale by dtmScale to increase resolution as a 16b integer (smaller files and type usable by OpenGL)
+
+		lib.runCmd( 'r.mapcalc --o "DTM' + zoom + 'X=round(' + tempFile + ' * ' + dtmScale + ')"' );
+
+		// lib.runCmd( 'g.remove -f type=raster name=' + tempFile );
 
 	}
 
-}
-
-//const setName = 'Pokljuka';
-
-var tileSetsText = fs.readFileSync( 'tileSetEntry.json' );
-
-//var tileSets = JSON.parse( tileSetsText );
-
-var tileSet = JSON.parse( tileSetsText );
-
-console.log( tileSet );
-createRasters( tileSet );
-
-/*
-var tileSet = tileSets.find(  function ( e ) { return e.title === setName ;} );
-
-if ( tileSet !== undefined ) {
-
-	console.log( 'Creating rasters' );
-
-	createRasters( tileSet );
+	fs.writeFileSync( 'tileSetEntry.json', JSON.stringify( tileSet, null, '\r\t' ) );
 
 }
-*/
+
+var tileSetEntry = fs.readFileSync( 'tileSetEntry.json' );
+
+createRasters( JSON.parse( tileSetEntry ) );
 
 // EOF

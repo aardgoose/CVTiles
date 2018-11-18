@@ -1,22 +1,15 @@
 'use strict';
 
 const fs = require( 'fs' );
-const { execSync } = require( 'child_process' );
-
-const halfMapExtent = 6378137 * Math.PI; // from EPSG:3875 definition
-
-function runCmd( cmd ) {
-
-	console.log( cmd );
-	execSync( cmd );
-
-}
+const lib = require( './CVTlib' );
 
 function tileArea( x, y, z, maxZoom ) {
 
+	const halfMapExtent = lib.halfMapExtent;
+
 	var x1, y1, z1;
-	var tileWidth = halfMapExtent / Math.pow( 2, z - 1 );
-	var resolution = tileWidth / 128; // note: tile area extended by resolution / 2 all round givving 256 sample row & columns
+	var tileWidth = lib.zoomWidth( z );
+	var resolution = tileWidth / tileSet.divisions; // note: tile area extended by resolution / 2 all round givving 256 sample row & columns
 	var offset = resolution / 2;
 	var outFile;
 
@@ -30,11 +23,11 @@ function tileArea( x, y, z, maxZoom ) {
 
 	if ( z > 8 ) {
 
-		runCmd( 'g.region n=' + n + ' s=' + s + ' w=' +  w + ' e=' + e + ' nsres=' + resolution + ' ewres=' + resolution );
+		lib.runCmd( 'g.region n=' + n + ' s=' + s + ' w=' +  w + ' e=' + e + ' nsres=' + resolution + ' ewres=' + resolution );
 
 		outFile = 'dtm\\' + z + '\\DTM-' + x + '-' + y + '.bin';
 
-		runCmd( 'r.out.bin bytes=2 input=DTM' + z + 'X@' + mapSet +  ' output=' + outFile );
+		lib.runCmd( 'r.out.bin bytes=2 input=DTM' + z + 'X@' + mapSet +  ' output=' + outFile );
 
 	}
 
