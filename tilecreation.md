@@ -17,7 +17,7 @@ title: Tile Creation
 
 To define a tile set, you must determine the specifications of the Slippy Map tiles that will cover your cave model, at a suitable zoom level. CaveView displays the tiles required to cover your model in the Javascript console as:
 
-`load: [ zoom/x/y ] `, where zoom, x and y are the tile zoom level, x and y coordinates.
+`load: [ zoom/x/y ]`, where zoom, x and y are the tile zoom level, x and y coordinates.
 
 Example:
 ```
