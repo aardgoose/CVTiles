@@ -4,7 +4,7 @@ title: Terrain Tiles
 
 # Terrain Tiles
 
-Tools to create terrain for CaveView
+Tools to create terrain for CaveView.
 
 ## Introduction
 
