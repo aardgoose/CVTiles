@@ -37,7 +37,7 @@ The DTM used must be in the ESPG:3875 (WebMercator) CRS. If your DTM is already 
 
 Convert the DTM with the GDAL 'gdalwarp' tool as follows (the GDAL tools are distributed with GRASS and other GIS applications):
 
-gdalwap -s_srs <source CRS> -t_srs EPSG:3875 -r bilinear <source file> <output file>
+`gdalwap -s_srs &lt;source CRS&gt; -t_srs EPSG:3875 -r bilinear &lt;source file&gt; &lt;output file&gt;`
 
 This produces a GeoTIFF file.
 
@@ -53,7 +53,7 @@ Copy the files 'makeRasters.js' and 'makeTiles.js' into an empty directory with 
 
 Create GRASS raster data in the required format:
 
-node makeRasters.js &lt;source raster&gt;@&lt;mapset&gt;
+`node makeRasters.js &lt;source raster&gt;@&lt;mapset&gt;`
 
 where &lt;source raster&gt; is the name of the raster chosen in step 3 and &lt;mapset&gt; is the name of the map set created in step 3. The node command and location will vary according to the OS in use.
 
@@ -61,7 +61,7 @@ This creates a set of new GRASS rasters at the required resolutions and modifies
 
 To create the individual tiles:
 
-node makeTiles &lt;mapset&gt;
+`node makeTiles &lt;mapset&gt;`
 
 This will create the subdirectory as specified in the tileSetEntry usbdirectory property, and populate this with subdirectories and tiles for each zoom level.
 
