@@ -33,11 +33,10 @@ The tile set is specified in a file tileSet.json which has the following format:
 [
 	{
 		"title": "Peak District",
-		"dtmMaxZoom": 14, // maximum zoom level for terrain tiles
-		"maxZoom": 19, // maximum zoom level for image overlays 
+		"overlayMaxZoom": 19, // maximum zoom level for image overlays 
 		"minZoom": 11, // minimum zoom level for terrain tiles
+		"maxZoom": 14, // maximum zoom level for terrain tiles
 		"divisions": 128, // default grid size
-		"directory": "",
 		"subdirectory": "<directory name", // directory containing tile files
 		"dtmScale": 64,  // scaling factor between 16 bit integers and metres.
 		"minX": 1013, // miminmum x tile coordinate ( at zoom level minZoom )
