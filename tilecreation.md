@@ -53,15 +53,15 @@ Copy the files 'makeRasters.js' and 'makeTiles.js' into an empty directory with 
 
 Create GRASS raster data in the required format:
 
-node makeRasters.js <source raster>@<mapset>
+node makeRasters.js &lt;source raster&gt;@&lt;mapset&gt;
 
-where <source raster> is the name of the raster chosen in step 3 and <mapset> is the name of the map set created in step 3. The node command and location will vary according to the OS in use.
+where &lt;source raster&gt; is the name of the raster chosen in step 3 and &lt;mapset&gt; is the name of the map set created in step 3. The node command and location will vary according to the OS in use.
 
 This creates a set of new GRASS rasters at the required resolutions and modifies the tileSetEntry.json file as needed.
 
 To create the individual tiles:
 
-node makeTiles <mapset>
+node makeTiles &lt;mapset&gt;
 
 This will create the subdirectory as specified in the tileSetEntry usbdirectory property, and populate this with subdirectories and tiles for each zoom level.
 
