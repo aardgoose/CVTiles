@@ -5,18 +5,17 @@ var fs = require( 'fs' );
 const lib = require( './CVTlib' );
 const MAXINT = 65536;
 
-function createRasters( tileSet ) {
+function createRasters( tileSet, raster, mapSet ) {
 
-	const mapSet = 'ANDARA';
 	const divisions = tileSet.divisions;
 	const halfMapExtent = lib.halfMapExtent;
 
-	var sourceRaster = 'SOURCE';
-
 	var n, s, e, w, zoom;
-
 	var maxTileWidth = lib.zoomWidth( tileSet.minZoom );
-	var b = lib.runCmd( 'r.info -g -r map=SOURCE@ANDARA');
+
+	var sourceRaster = raster + '@' + mapSet;
+
+	var b = lib.runCmd( 'r.info -g -r map=' + sourceRaster );
 
 	const lines = b.split( '\r\n' );
 
@@ -54,8 +53,6 @@ function createRasters( tileSet ) {
 	console.log( 'selected dtm scale: ' + dtmScale );
 
 	tileSet.dtmScale = dtmScale;
-
-	sourceRaster += '@' + mapSet;
 
 	for ( zoom = tileSet.maxZoom; zoom >= tileSet.minZoom; zoom-- ) {
 
@@ -100,8 +97,28 @@ function createRasters( tileSet ) {
 
 }
 
-var tileSetEntry = fs.readFileSync( 'tileSetEntry.json' );
+console.log( process.argv );
 
-createRasters( JSON.parse( tileSetEntry ) );
+if ( process.argv.length === 3 ) {
+
+	const rasterComponents = process.argv[ 2 ].split ( '@' );
+
+	if ( rasterComponents.length === 2 ) {
+
+		var tileSetEntry = fs.readFileSync( 'tileSetEntry.json' );
+		createRasters( JSON.parse( tileSetEntry ), rasterComponents[ 0 ], rasterComponents[ 1 ] );
+
+	} else {
+
+		console.log( 'makeRaster: invalid raster name [' + process.argv[ 2 ]  + ' ]' );
+
+	}
+
+} else {
+
+	console.log( 'makeRaster: incorrect number of parameters' );
+	console.log( 'makeRaster: input raster name required' );
+
+}
 
 // EOF
