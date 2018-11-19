@@ -97,8 +97,6 @@ function createRasters( tileSet, raster, mapSet ) {
 
 }
 
-console.log( process.argv );
-
 if ( process.argv.length === 3 ) {
 
 	const rasterComponents = process.argv[ 2 ].split ( '@' );
