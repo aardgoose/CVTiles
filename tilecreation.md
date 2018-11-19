@@ -13,7 +13,7 @@ title: Tile Creation
 
 ## Procedure
 
-1. Tile Set Definition.
+### 1. Tile Set Definition.
 
 To define a tile set, you must determine the specifications of the Slippy Map tiles that will cover your cave model, at a suitable zoom level. CaveView displays the tiles required to cover your model in the Javascript console as:
 
@@ -31,7 +31,7 @@ The format of the tileSet.json file that is used to define a tile set is describ
 
 To aid this process CaveView 1.10.1 and greater allow a prototype file tileSetEntry.json to be automatically downloaded.  To obtain this file, load your model into CaveView and display the terrain. If no terrain is available and the model has a supported CRS, a flat terrain will be displayed and a download button will be shown in the 'Terrain' tab (not supported in Internet Explorer 11). Clicking this button will download the prototype file.
 
-2. DTM Reprojection
+### 2. DTM Reprojection
 
 The DTM used must be in the ESPG:3875 (WebMercator) CRS. If your DTM is already in this CRS this step can be ignored.
 
@@ -41,13 +41,13 @@ gdalwap -s_srs <source CRS> -t_srs EPSG:3875 -r bilinear <source file> <output f
 
 This produces a GeoTIFF file.
 
-3. Import the DTM into GRASS
+### 3. Import the DTM into GRASS
 
 Create a GRASS location using EPSG:3875 and a empty mapset within that location.
 
 Import the DTM produced in step 2 into this mapset, this used the command r.in.gdal which can be located with the 'File->Import raster data->Import common raster formats'.
 
-4. Tile Creation
+### 4. Tile Creation
 
 Copy the files 'makeRasters.js' and 'makeTiles.js' into an empty directory with the tileSetEntry.json file described previously.
 
@@ -65,12 +65,12 @@ node makeTiles <mapset>
 
 This will create the subdirectory as specified in the tileSetEntry usbdirectory property, and populate this with subdirectories and tiles for each zoom level.
 
-5. Install the Tile Set
+### 5. Install the Tile Set
 
 Copy or move the subdirectory created in step 4 to the terrainDirectory location.
 Create a file tileSets.json containing the object defined in the tileSetEntry.json file in an array. If this file already exists, the the new entry to the existing array.
 
-6. Test
+### 6. Test
 
 Reload the model and ensure that the terrain is displayed correctly. Any errors are reported in the browser Javascript console.
 
