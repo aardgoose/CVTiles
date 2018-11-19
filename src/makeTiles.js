@@ -15,7 +15,7 @@ function makeDirectories( prefix ) {
 
 }
 
-function tileArea( x, y, z, maxZoom ) {
+function tileArea( mapSet, x, y, z, maxZoom ) {
 
 	const halfMapExtent = lib.halfMapExtent;
 
@@ -49,37 +49,41 @@ function tileArea( x, y, z, maxZoom ) {
 		y1 = y * 2;
 		z1 = z + 1;
 
-		tileArea( x1,     y1,     z1, maxZoom );
-		tileArea( x1 + 1, y1,     z1, maxZoom );
-		tileArea( x1,     y1 + 1, z1, maxZoom );
-		tileArea( x1 + 1, y1 + 1, z1, maxZoom );
+		tileArea( mapSet, x1,     y1,     z1, maxZoom );
+		tileArea( mapSet, x1 + 1, y1,     z1, maxZoom );
+		tileArea( mapSet, x1,     y1 + 1, z1, maxZoom );
+		tileArea( mapSet, x1 + 1, y1 + 1, z1, maxZoom );
 
 	}
 
 }
-
 
 // EPSG:3875 "Web Mercator" tile range
 
-var mapSet = 'ANDARA';
+if ( process.argv.length === 3 ) {
 
-var tileSetsText = fs.readFileSync( 'tileSetEntry.json' );
+	const mapSet = process.argv[ 2 ];
 
-const tileSet = JSON.parse( tileSetsText );
+	const tileSetsText = fs.readFileSync( 'tileSetEntry.json' );
+	const tileSet = JSON.parse( tileSetsText );
 
-console.log( tileSet );
-
-var x, y;
-
-makeDirectories( tileSet.subdirectory );
-
-for ( x = tileSet.minX; x <= tileSet.maxX; x++ ) {
-
-	for ( y = tileSet.minY; y <= tileSet.maxY; y++ ) {
-
-		tileArea( x, y, tileSet.minZoom, tileSet.maxZoom );
-
+	var x, y;
+	
+	makeDirectories( tileSet.subdirectory );
+	
+	for ( x = tileSet.minX; x <= tileSet.maxX; x++ ) {
+	
+		for ( y = tileSet.minY; y <= tileSet.maxY; y++ ) {
+	
+			tileArea( mapSet, x, y, tileSet.minZoom, tileSet.maxZoom );
+	
+		}
+	
 	}
 
-}
+} else {
 
+	console.log( 'makeTiles: incorrect number of parameters' );
+	console.log( 'makeTiles: mapset required' );
+
+}
