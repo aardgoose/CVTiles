@@ -3,6 +3,18 @@
 const fs = require( 'fs' );
 const lib = require( './CVTlib' );
 
+function makeDirectories( prefix ) {
+
+	fs.mkdirSync( prefix );
+
+	for ( i = tileSet.minZoom; i <= tileSet.maxZoom; i++ ) {
+
+		fs.mkdirSync( prefix + '/' + i );
+
+	}
+
+}
+
 function tileArea( x, y, z, maxZoom ) {
 
 	const halfMapExtent = lib.halfMapExtent;
@@ -53,13 +65,13 @@ var mapSet = 'ANDARA';
 
 var tileSetsText = fs.readFileSync( 'tileSetEntry.json' );
 
-//var tileSets = JSON.parse( tileSetsText );
-
-var tileSet = JSON.parse( tileSetsText );
+const tileSet = JSON.parse( tileSetsText );
 
 console.log( tileSet );
 
 var x, y;
+
+makeDirectories( tileSet.subdirectory );
 
 for ( x = tileSet.minX; x <= tileSet.maxX; x++ ) {
 
