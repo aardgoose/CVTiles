@@ -3,9 +3,14 @@
 const fs = require( 'fs' );
 const lib = require( './CVTlib' );
 
-function makeDirectories( prefix ) {
+function makeDirectories( tileSet ) {
+
+	const prefix =  tileSet.subdirectory;
+
+	var i;
 
 	fs.mkdirSync( prefix );
+
 
 	for ( i = tileSet.minZoom; i <= tileSet.maxZoom; i++ ) {
 
@@ -15,7 +20,7 @@ function makeDirectories( prefix ) {
 
 }
 
-function tileArea( mapSet, x, y, z, maxZoom ) {
+function tileArea( tileSet, x, y, z, maxZoom ) {
 
 	const halfMapExtent = lib.halfMapExtent;
 
@@ -40,6 +45,8 @@ function tileArea( mapSet, x, y, z, maxZoom ) {
 		outFile = 'dtm\\' + z + '\\DTM-' + x + '-' + y + '.bin';
 
 		lib.runCmd( 'r.out.bin bytes=2 input=DTM' + z + 'X@' + mapSet +  ' output=' + outFile );
+
+		lib.dzzEncode( ouFile );
 
 	}
 
@@ -69,7 +76,7 @@ if ( process.argv.length === 3 ) {
 
 	var x, y;
 	
-	makeDirectories( tileSet.subdirectory );
+	makeDirectories( tileSet );
 	
 	for ( x = tileSet.minX; x <= tileSet.maxX; x++ ) {
 	
