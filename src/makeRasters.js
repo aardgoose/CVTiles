@@ -53,6 +53,7 @@ function createRasters( tileSet, raster, mapSet ) {
 	console.log( 'selected dtm scale: ' + dtmScale );
 
 	tileSet.dtmScale = dtmScale;
+	tileSet.encoding = "dzz";
 
 	for ( zoom = tileSet.maxZoom; zoom >= tileSet.minZoom; zoom-- ) {
 
