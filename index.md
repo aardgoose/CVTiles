@@ -21,7 +21,7 @@ The custom tile format supported uses the same [Slippy Map](https://wiki.openstr
 
 #### Tile File Format
 
-The tile format used is a simple sequence of 16 bit unsigned integers. The DTM height grid is in row major order. Heights ( in metres )  are multiplied by a scale factor ( by default 64 ) and rounded, to allow a vertical resolution better than 1m to be obtained.
+The tile format used is a simple sequence of 16 bit unsigned integers. The DTM height grid is in row major order. Heights ( in metres )  are multiplied by a scale factor ( which is automatically calaculated ) and rounded, to allow a vertical resolution better than 1m to be obtained.
 
 #### Tile Creation
 
