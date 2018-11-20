@@ -63,7 +63,7 @@ To create the individual tiles:
 
 `node makeTiles <mapset>`
 
-This will create the subdirectory as specified in the tileSetEntry usbdirectory property, and populate this with subdirectories and tiles for each zoom level.
+This will create the subdirectory as specified in the tileSetEntry subdirectory property, and populate this with subdirectories and tiles for each zoom level.
 
 ### 5 Install the Tile Set
 
