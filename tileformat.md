@@ -15,7 +15,7 @@ The tileSets.json file contains an array of tileSetEntries which are defined as 
 		"maxZoom": 14, // maximum zoom level for terrain tiles
 		"divisions": 128, // default grid size
 		"subdirectory": "<directory name", // directory containing tile files
-		"dtmScale": 64,  // scaling factor between 16 bit integers and metres.
+		"dtmScale": 64, // scaling factor between 16 bit integers and metres.
 		"minX": 1013, // miminmum x tile coordinate ( at zoom level minZoom )
 		"maxX": 1014, // maximum x tile coordinate ( at zoom level minZoom )
 		"minY": 663, // miminmum y tile coordinate ( at zoom level minZoom )
