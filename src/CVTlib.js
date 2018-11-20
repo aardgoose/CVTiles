@@ -20,11 +20,11 @@ exports.zoomWidth = function zoomWidth( zoom ) {
 
 function toZigzag ( n, buffer ) {
 
-	var z = ( n << 1 ) ^ ( n >> ( 16 - 1 ) ); // where the actual "zig-zag" occurs
+	var z = ( n << 1 ) ^ ( n >> 31 ); // where the actual "zig-zag" occurs
 
 	while ( z > 127 ) {
 
-		buffer.push( (z & 0x7F) | 0x80 );
+		buffer.push( ( z & 0x7F ) | 0x80 );
 		z >>= 7;
 
 	}
@@ -33,18 +33,18 @@ function toZigzag ( n, buffer ) {
 
 }
 
-function fromZigzag( buffer ) {
+function fromZigzag( buffer, original ) {
 
-	var last = 0;
+	var last = 0, i, outPos = 0;
 
 	for ( i = 0; i < buffer.length; i++ ) {
 
-		var z = 0, shift = 0, i;
+		var z = 0, shift = 0;
 		var b = buffer[ i ];
 
 		while ( b & 0x80 ) {
 
-			z |= ( b & 0x7F) << shift;
+			z |= ( b & 0x7F ) << shift;
 			shift += 7;
 			b = buffer[ ++i ];
 
@@ -52,11 +52,13 @@ function fromZigzag( buffer ) {
 
 		z |= b << shift;
 
-		var v = (z & 1) ? (z >> 1) ^ -1 : (z >> 1);
+		var v = ( z & 1 ) ? ( z >> 1 ) ^ -1 : ( z >> 1 );
 
 		last += v;
-		console.log( last );
-		// return (z & 1) ? (z >> 1) ^ -1 : (z >> 1);
+
+		if ( last != original.readUInt16LE( outPos ) ) throw "error checking encoding";
+
+		outPos += 2;
 
 	}
 
@@ -65,7 +67,7 @@ function fromZigzag( buffer ) {
 exports.dzzEncode = function dzzEncode( file ) {
 
 	const buffer = fs.readFileSync( file );
-
+	console.log( 'cc', buffer.length / 2 );
 	const outbuf = [];
 	const length = buffer.length;
 
@@ -80,8 +82,7 @@ exports.dzzEncode = function dzzEncode( file ) {
 
 	}
 
-	fromZigzag( outbuf );
-//	fs.writeFileSync( file + '.dzz', Buffer.from( outbuf ) );
+	fs.writeFileSync( file, Buffer.from( outbuf ) );
 
 	console.log( 'writing file: ' + file + ', compression: ' + Math.round( 100 * outbuf.length / buffer.length ) + '%' );
 
