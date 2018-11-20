@@ -20,7 +20,7 @@ function makeDirectories( tileSet ) {
 
 }
 
-function tileArea( tileSet, x, y, z, maxZoom ) {
+function tileArea( mapSet, x, y, z, maxZoom, tileSet ) {
 
 	const halfMapExtent = lib.halfMapExtent;
 
@@ -46,7 +46,7 @@ function tileArea( tileSet, x, y, z, maxZoom ) {
 
 		lib.runCmd( 'r.out.bin bytes=2 input=DTM' + z + 'X@' + mapSet +  ' output=' + outFile );
 
-		lib.dzzEncode( ouFile );
+		lib.dzzEncode( outFile );
 
 	}
 
@@ -56,10 +56,10 @@ function tileArea( tileSet, x, y, z, maxZoom ) {
 		y1 = y * 2;
 		z1 = z + 1;
 
-		tileArea( mapSet, x1,     y1,     z1, maxZoom );
-		tileArea( mapSet, x1 + 1, y1,     z1, maxZoom );
-		tileArea( mapSet, x1,     y1 + 1, z1, maxZoom );
-		tileArea( mapSet, x1 + 1, y1 + 1, z1, maxZoom );
+		tileArea( mapSet, x1,     y1,     z1, maxZoom, tileSet );
+		tileArea( mapSet, x1 + 1, y1,     z1, maxZoom, tileSet );
+		tileArea( mapSet, x1,     y1 + 1, z1, maxZoom, tileSet );
+		tileArea( mapSet, x1 + 1, y1 + 1, z1, maxZoom, tileSet );
 
 	}
 
@@ -82,7 +82,7 @@ if ( process.argv.length === 3 ) {
 	
 		for ( y = tileSet.minY; y <= tileSet.maxY; y++ ) {
 	
-			tileArea( mapSet, x, y, tileSet.minZoom, tileSet.maxZoom );
+			tileArea( mapSet, x, y, tileSet.minZoom, tileSet.maxZoom, tileSet );
 	
 		}
 	

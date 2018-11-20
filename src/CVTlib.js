@@ -33,6 +33,35 @@ function toZigzag ( n, buffer ) {
 
 }
 
+function fromZigzag( buffer ) {
+
+	var last = 0;
+
+	for ( i = 0; i < buffer.length; i++ ) {
+
+		var z = 0, shift = 0, i;
+		var b = buffer[ i ];
+
+		while ( b & 0x80 ) {
+
+			z |= ( b & 0x7F) << shift;
+			shift += 7;
+			b = buffer[ ++i ];
+
+		}
+
+		z |= b << shift;
+
+		var v = (z & 1) ? (z >> 1) ^ -1 : (z >> 1);
+
+		last += v;
+		console.log( last );
+		// return (z & 1) ? (z >> 1) ^ -1 : (z >> 1);
+
+	}
+
+}
+
 exports.dzzEncode = function dzzEncode( file ) {
 
 	const buffer = fs.readFileSync( file );
@@ -51,7 +80,8 @@ exports.dzzEncode = function dzzEncode( file ) {
 
 	}
 
-	fs.writeFileSync( file + '.dzz', Buffer.from( outbuf ) );
+	fromZigzag( outbuf );
+//	fs.writeFileSync( file + '.dzz', Buffer.from( outbuf ) );
 
 	console.log( 'writing file: ' + file + ', compression: ' + Math.round( 100 * outbuf.length / buffer.length ) + '%' );
 
