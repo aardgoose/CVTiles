@@ -11,6 +11,7 @@ function makeDirectories( tileSet ) {
 
 	fs.mkdirSync( prefix );
 
+
 	for ( i = tileSet.minZoom; i <= tileSet.maxZoom; i++ ) {
 
 		fs.mkdirSync( prefix + '/' + i );
@@ -44,6 +45,8 @@ function tileArea( mapSet, x, y, z, maxZoom, tileSet ) {
 		outFile = 'dtm\\' + z + '\\DTM-' + x + '-' + y + '.bin';
 
 		lib.runCmd( 'r.out.bin bytes=2 input=DTM' + z + 'X@' + mapSet +  ' output=' + outFile );
+
+		lib.dzzEncode( outFile );
 
 	}
 
