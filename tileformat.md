@@ -10,6 +10,7 @@ The tileSets.json file contains an array of tileSetEntries which are defined as 
 ```javascript
 	{
 		"title": "Peak District", // title of the tile set
+		"encoding": "dzz" // delta and zigzag encoded
 		"overlayMaxZoom": 19, // maximum zoom level for image overlays - may be removed in future
 		"minZoom": 11, // minimum zoom level for terrain tiles
 		"maxZoom": 14, // maximum zoom level for terrain tiles
