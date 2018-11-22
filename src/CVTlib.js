@@ -72,19 +72,30 @@ exports.dzzEncode = function dzzEncode( file ) {
 	const length = buffer.length;
 
 	var last = 0, i;
+	var zCount = 0;
 
 	for ( i = 0; i < length; i += 2 ) {
 
 		const z = buffer.readUInt16LE( i );
 		toZigzag( z - last, outbuf );
+		if ( z === 0 ) zCount++;
 
 		last = z;
 
 	}
 
-	fs.writeFileSync( file, Buffer.from( outbuf ) );
+	if ( zCount === length / 2 ) {
 
-	console.log( 'writing file: ' + file + ', compression: ' + Math.round( 100 * outbuf.length / buffer.length ) + '%' );
+		console.log( 'writing file: ' + file + ', empty file' );
+		fs.writeFileSync( file, 'DZZ0' );
+
+	} else {
+
+			fs.writeFileSync( file, Buffer.from( outbuf ) );
+
+			console.log( 'writing file: ' + file + ', compression: ' + Math.round( 100 * outbuf.length / buffer.length ) + '%' );
+
+	}
 
 }
 
