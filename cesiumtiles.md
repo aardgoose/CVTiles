@@ -4,7 +4,7 @@ Cesium GS provide a free to use, under a non open licence, [Cesium World Terrain
 
 The maxmium resoluion available is dependant on the availablity of suitable DTM data and varies by country and region. These tiles are less accurate than full DTM grid tiles and may show artifacts from the tile creation process (banding etc).
 
-Two steps are required to use Cesium terrain tiles.
+Two steps are required to use Cesium terrain tiles:
 
 ## Obtain an access token
 
