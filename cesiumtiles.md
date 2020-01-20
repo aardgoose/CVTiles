@@ -1,6 +1,6 @@
 # Cesium Tiles
 
-Cesium GS probvide a free to use, under a non open licence, [Cesium World Terrain tile set](https://cesium.com/content/#cesium-world-terrain) covering the entire globe at variable resolutions in a triangulated mesh format. These tiles provided using the  EPSG:4326 coordinate reference system (CRS). Overlay imagery must also use this CRS.
+Cesium GS provide a free to use, under a non open licence, [Cesium World Terrain tile set](https://cesium.com/content/#cesium-world-terrain) covering the entire globe at variable resolutions in a triangulated mesh format. These tiles are provided using the EPSG:4326 coordinate reference system (CRS). Any overlay imagery must also use this CRS.
 
 ## Obtain an access token
 
@@ -12,6 +12,8 @@ Two configuration properties must be set:
 
 1. displayCRS: 'ORIGINAL'
 2. cesiumAccessToken: `<your access token string>`
+
+Example:
 
 ```javascript
 	CV.UI.init( "scene", {
