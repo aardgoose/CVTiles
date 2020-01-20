@@ -19,7 +19,7 @@ Two configuration properties must be set:
 
 This assumes that you are using a cave model that has a defined CRS (available for Survex .3d models using the *CS command) or have specified the Proj4 string for the correct CRS using the 'defaultCRS' parameter. This is shown in the following example.
 
-The Therion .lox format does not specifiy a CRS.
+The Therion .lox format does not specifiy a CRS and a defaultCRS must be provided.
 
 Example:
 
