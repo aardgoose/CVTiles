@@ -17,13 +17,18 @@ Two configuration properties must be set:
 1. displayCRS: 'ORIGINAL'
 2. cesiumAccessToken: `<your access token string>`
 
+This assumes that you are using a cave model that has a defined CRS (available for Survex .3d models using the *CS command) or have specified the Proj4 string for the correct CRS using the 'defaultCRS' parameter. This is shown in the following example.
+
+The Therion .lox format does not specifiy a CRS.
+
 Example:
 
 ```javascript
 	CV.UI.init( "scene", {
 		surveyDirectory: "/surveys/",
 		home: "/CaveView/",
-		displayCRS: 'ORIGINAL',
-		cesiumAccessToken: '<your cesium access token>'
+		displayCRS: "ORIGINAL",
+		cesiumAccessToken: "<your cesium access token>",
+		defaultCRS: "+proj=utm +zone=30 +ellps=WGS84 +datum=WGS84 +units=m +no_defs"
 	} );
 ```
