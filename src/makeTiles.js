@@ -42,7 +42,7 @@ function tileArea( mapSet, x, y, z, maxZoom, tileSet ) {
 
 		lib.runCmd( 'g.region n=' + n + ' s=' + s + ' w=' +  w + ' e=' + e + ' nsres=' + resolution + ' ewres=' + resolution );
 
-		outFile = 'dtm\\' + z + '\\DTM-' + x + '-' + y + '.bin';
+		outFile = tileSet.subdirectory + '\\' + z + '\\DTM-' + x + '-' + y + '.bin';
 
 		lib.runCmd( 'r.out.bin bytes=2 input=DTM' + z + 'X@' + mapSet +  ' output=' + outFile );
 
